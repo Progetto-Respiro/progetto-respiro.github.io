@@ -2,7 +2,7 @@
   "works": [
     {
       "id": "mana",
-      "title": "Mana",
+      "title": "Mana °",
       "soon": false,
       "hero": "media/mana-hero.webp",
       "en": {
@@ -14,21 +14,106 @@
         "text": "Mana è una seduta in multistrato di betulla da 20 mm, composta da quattro pannelli piani che si montano a incastro, senza viti né attrezzi. Le gambe offrono due altezze di seduta: 170 mm, vicino al pavimento, per sedersi a gambe incrociate o meditare; e 340 mm, un primo passo per un corpo abituato alla sedia. Lo schienale è curvato con la tecnica del kerf bending, che trasforma un pannello piano in un sostegno morbido. Mana nasce da una tesi magistrale sul comfort come mezzo e non come fine: un punto d'incontro tra il comfort che si riceve e quello che si raggiunge."
       },
       "specs": [
-        { "en": ["Material", "20 mm birch plywood"], "it": ["Materiale", "Multistrato di betulla 20 mm"] },
-        { "en": ["Seat heights", "170 mm / 340 mm"], "it": ["Altezze di seduta", "170 mm / 340 mm"] },
-        { "en": ["Dimensions", "800 × 651 × 519 mm (low) — 800 × 600 × 519 mm (high)"], "it": ["Dimensioni", "800 × 651 × 519 mm (bassa) — 800 × 600 × 519 mm (alta)"] },
-        { "en": ["Backrest", "Curved, R 750 mm, kerf bending"], "it": ["Schienale", "Curvo, R 750 mm, kerf bending"] },
-        { "en": ["Assembly", "Slot-together, tool-free"], "it": ["Montaggio", "A incastro, senza attrezzi"] }
+        {
+          "en": [
+            "Material",
+            "20 mm birch plywood"
+          ],
+          "it": [
+            "Materiale",
+            "Multistrato di betulla 20 mm"
+          ]
+        },
+        {
+          "en": [
+            "Seat heights",
+            "170 mm / 340 mm"
+          ],
+          "it": [
+            "Altezze di seduta",
+            "170 mm / 340 mm"
+          ]
+        },
+        {
+          "en": [
+            "Dimensions",
+            "800 × 651 × 519 mm (low) — 800 × 600 × 519 mm (high)"
+          ],
+          "it": [
+            "Dimensioni",
+            "800 × 651 × 519 mm (bassa) — 800 × 600 × 519 mm (alta)"
+          ]
+        },
+        {
+          "en": [
+            "Backrest",
+            "Curved, R 750 mm, kerf bending"
+          ],
+          "it": [
+            "Schienale",
+            "Curvo, R 750 mm, kerf bending"
+          ]
+        },
+        {
+          "en": [
+            "Assembly",
+            "Slot-together, tool-free"
+          ],
+          "it": [
+            "Montaggio",
+            "A incastro, senza attrezzi"
+          ]
+        }
       ],
       "images": [
-        { "src": "media/mana-high.webp", "type": "object", "en": "", "it": "" },
-        { "src": "media/mana-living-low.webp", "type": "photo", "en": "Low version, in a living room", "it": "Versione bassa, in un soggiorno" },
-        { "src": "media/mana-cross-legged.webp", "type": "photo", "en": "Sitting cross-legged", "it": "Seduta a gambe incrociate" },
-        { "src": "media/mana-living-high.webp", "type": "photo", "en": "High version, in a living room", "it": "Versione alta, in un soggiorno" },
-        { "src": "media/mana-relaxed.webp", "type": "photo", "en": "Relaxed, feet on the floor", "it": "Seduta rilassata, piedi a terra" },
-        { "src": "media/mana-drawing-low.webp", "type": "drawing", "en": "Low version, plan, front and side view (mm)", "it": "Versione bassa, pianta, prospetto e vista laterale (mm)" },
-        { "src": "media/mana-drawing-high.webp", "type": "drawing", "en": "High version, plan, front and side view (mm)", "it": "Versione alta, pianta, prospetto e vista laterale (mm)" },
-        { "src": "media/mana-exploded.webp", "type": "drawing", "en": "Exploded view: four panels", "it": "Esploso: quattro pannelli" }
+        {
+          "src": "media/mana-high.webp",
+          "type": "object",
+          "en": "",
+          "it": ""
+        },
+        {
+          "src": "media/mana-living-low.webp",
+          "type": "photo",
+          "en": "Low version, in a living room",
+          "it": "Versione bassa, in un soggiorno"
+        },
+        {
+          "src": "media/mana-cross-legged.webp",
+          "type": "photo",
+          "en": "Sitting cross-legged",
+          "it": "Seduta a gambe incrociate"
+        },
+        {
+          "src": "media/mana-living-high.webp",
+          "type": "photo",
+          "en": "High version, in a living room",
+          "it": "Versione alta, in un soggiorno"
+        },
+        {
+          "src": "media/mana-relaxed.webp",
+          "type": "photo",
+          "en": "Relaxed, feet on the floor",
+          "it": "Seduta rilassata, piedi a terra"
+        },
+        {
+          "src": "media/mana-drawing-low.webp",
+          "type": "drawing",
+          "en": "Low version, plan, front and side view (mm)",
+          "it": "Versione bassa, pianta, prospetto e vista laterale (mm)"
+        },
+        {
+          "src": "media/mana-drawing-high.webp",
+          "type": "drawing",
+          "en": "High version, plan, front and side view (mm)",
+          "it": "Versione alta, pianta, prospetto e vista laterale (mm)"
+        },
+        {
+          "src": "media/mana-exploded.webp",
+          "type": "drawing",
+          "en": "Exploded view: four panels",
+          "it": "Esploso: quattro pannelli"
+        }
       ]
     },
     {
