@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="it">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Respiro — Lavori</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #e8ecf0; --dim: #8a929b; --line: rgba(232, 236, 240, .16); --dark: #050608; --panel: #0b0d10; --sky: #7fb8e6; --red: #c8323c; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--dark); color: var(--ink); }
+  body { font: 400 16px/1.5 'EB Garamond', Georgia, serif; }
+  h1, h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; margin: 0; }
+  h1 { font-size: 28px; letter-spacing: .04em; }
+  h2 { font-size: 34px; }
+  .label, label > span, th { color: var(--dim); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 400; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { background: none; border: 1px solid var(--line); padding: 6px 14px; cursor: pointer; }
+  button:hover { border-color: var(--ink); }
+  button.main { border-color: var(--ink); }
+  button.danger:hover { border-color: var(--red); color: var(--red); }
+  button:disabled { opacity: .35; cursor: default; border-color: var(--line); }
+  input, textarea, select { width: 100%; background: var(--panel); border: 1px solid var(--line); padding: 8px 10px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--sky); }
+  input[type=checkbox] { width: auto; accent-color: var(--sky); }
+  textarea { min-height: 220px; resize: vertical; line-height: 1.55; }
+  label { display: grid; gap: 6px; }
+  a { color: var(--sky); }
+  [hidden] { display: none !important; }
+
+  #login { max-width: 460px; margin: 14vh auto; padding: 0 20px; display: grid; gap: 18px; }
+  #login p { color: var(--dim); margin: 0; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  header { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 14px 24px; background: rgba(5, 6, 8, .92); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  #status { color: var(--dim); font-size: 14px; }
+  #status.error { color: var(--red); }
+  main { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 62px); }
+  nav { border-right: 1px solid var(--line); padding: 20px; display: grid; gap: 4px; align-content: start; }
+  nav .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; cursor: pointer; border: 1px solid transparent; }
+  nav .item.on { border-color: var(--line); background: var(--panel); }
+  nav .item small { color: var(--dim); }
+  nav .moves button { border: 0; padding: 0 4px; color: var(--dim); }
+  nav > button { margin-top: 14px; }
+  #editor { padding: 28px 32px 80px; display: grid; gap: 28px; max-width: 1200px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .section { display: grid; gap: 14px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .section > .row { justify-content: space-between; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 0 6px 6px; }
+  td { padding: 3px; }
+  td:last-child { width: 1%; }
+  .images { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .image { border: 1px solid var(--line); padding: 10px; display: grid; gap: 8px; background: var(--panel); }
+  .image img { width: 100%; height: 150px; object-fit: contain; background: var(--dark); }
+  .hero { display: flex; gap: 20px; align-items: center; }
+  .hero img { width: 220px; height: 140px; object-fit: contain; background: var(--panel); border: 1px solid var(--line); }
+  .hint { color: var(--dim); font-size: 14px; margin: 0; }
+  .file { position: relative; overflow: hidden; display: inline-block; }
+  .file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    nav { border-right: 0; border-bottom: 1px solid var(--line); }
+    #editor { padding: 20px 16px 60px; }
+    .grid2 { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section id="login">
+  <h1>Respiro</h1>
+  <p>Accesso riservato. Serve un token GitHub con permesso di scrittura sul repository del sito.</p>
+  <label><span>Account</span><input id="owner" value="Progetto-Respiro" autocomplete="off"></label>
+  <label><span>Repository</span><input id="repo" value="progetto-respiro.github.io" autocomplete="off"></label>
+  <label><span>Ramo</span><input id="branch" value="main" autocomplete="off"></label>
+  <label><span>Token</span><input id="token" type="password" autocomplete="off"></label>
+  <label class="row"><input id="remember" type="checkbox"> Ricorda su questo dispositivo</label>
+  <div class="row"><button class="main" id="connect">Entra</button><span id="loginError" class="hint"></span></div>
+</section>
+
+<section id="app" hidden>
+  <header>
+    <h1>Lavori</h1>
+    <span id="status"></span>
+    <div class="row">
+      <button class="main" id="save" disabled>Pubblica</button>
+      <a id="site" target="_blank">Apri il sito</a>
+      <button id="logout">Esci</button>
+    </div>
+  </header>
+  <main>
+    <nav id="list"></nav>
+    <div id="editor"></div>
+  </main>
+</section>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'respiro-admin';
+const MAX = 1800;
+
+let cfg = null, data = null, sha = null, current = 0, dirty = false;
+const uploads = new Map();   // repo path -> base64 content waiting to be published
+const previews = new Map();  // repo path -> local object URL, until it's on the site
+
+// ---------- GitHub ----------
+
+async function gh(path, opts = {}) {
+  const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+    ...opts,
+    headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github+json', ...(opts.headers || {}) },
+  });
+  if (r.status === 404 && !opts.method) return null;
+  if (!r.ok) throw new Error(`${r.status} ${(await r.json().catch(() => ({}))).message || r.statusText}`);
+  return r.status === 204 ? null : r.json();
+}
+
+const put = (path, content, message, fileSha) =>
+  gh(path, { method: 'PUT', body: JSON.stringify({ message, content, branch: cfg.branch, ...(fileSha && { sha: fileSha }) }) });
+
+const toBase64 = text => {
+  const bytes = new TextEncoder().encode(text);
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(s);
+};
+const fromBase64 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, '')), c => c.charCodeAt(0)));
+
+async function load() {
+  const file = await gh(`content.json?ref=${cfg.branch}`);
+  if (file) {
+    data = JSON.parse(fromBase64(file.content));
+    sha = file.sha;
+  } else {
+    data = { works: [] };
+    sha = null;
+  }
+  data.works ||= [];
+}
+
+// ---------- login ----------
+
+function connectWith(c) {
+  cfg = c;
+  status('Carico…');
+  return load().then(() => {
+    $('login').hidden = true;
+    $('app').hidden = false;
+    const home = `${cfg.owner.toLowerCase()}.github.io`;
+    $('site').href = cfg.repo.toLowerCase() === home ? `https://${home}/` : `https://${home}/${cfg.repo}/`;
+    current = 0;
+    render();
+    status('');
+  });
+}
+
+$('connect').onclick = () => {
+  const c = { owner: $('owner').value.trim(), repo: $('repo').value.trim(), branch: $('branch').value.trim() || 'main', token: $('token').value.trim() };
+  if (!c.owner || !c.repo || !c.token) return ($('loginError').textContent = 'Compila account, repository e token.');
+  $('loginError').textContent = '';
+  connectWith(c)
+    .then(() => {
+      const store = $('remember').checked ? localStorage : sessionStorage;
+      try {
+        store.setItem(KEY, JSON.stringify(c));
+      } catch (e) {}
+    })
+    .catch(e => {
+      cfg = null;
+      $('loginError').textContent = e.message.startsWith('401') ? 'Token non valido.' : e.message.startsWith('404') ? 'Repository non trovato o token senza accesso.' : e.message;
+    });
+};
+
+$('logout').onclick = () => {
+  if (dirty && !confirm('Ci sono modifiche non pubblicate. Uscire comunque?')) return;
+  try {
+    localStorage.removeItem(KEY);
+    sessionStorage.removeItem(KEY);
+  } catch (e) {}
+  location.reload();
+};
+
+addEventListener('beforeunload', e => {
+  if (dirty) e.preventDefault();
+});
+
+// ---------- editing ----------
+
+function status(text, error) {
+  $('status').textContent = text;
+  $('status').className = error ? 'error' : '';
+}
+
+function touch() {
+  dirty = true;
+  $('save').disabled = false;
+  status('Modifiche non pubblicate');
+}
+
+const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'lavoro';
+const src = path => previews.get(path) || (path ? path + '?v=' + (sha || '') : '');
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+function blank() {
+  return { id: '', title: 'Nuovo lavoro', soon: true, hero: '', en: { kind: '', text: '' }, it: { kind: '', text: '' }, specs: [], images: [] };
+}
+
+function render() {
+  const list = $('list');
+  list.innerHTML = data.works.map((w, i) => `
+    <div class="item ${i === current ? 'on' : ''}" data-i="${i}">
+      <span>${esc(w.title) || '—'} ${w.soon ? '<small>· in sviluppo</small>' : ''}</span>
+      <span class="moves"><button data-move="-1" title="Su">↑</button><button data-move="1" title="Giù">↓</button></span>
+    </div>`).join('') + '<button id="add">+ Nuovo lavoro</button>';
+
+  list.querySelectorAll('.item').forEach(el => (el.onclick = e => {
+    const i = +el.dataset.i;
+    const move = e.target.dataset.move;
+    if (move) {
+      const j = i + +move;
+      if (j < 0 || j >= data.works.length) return;
+      [data.works[i], data.works[j]] = [data.works[j], data.works[i]];
+      current = j;
+      touch();
+    } else current = i;
+    render();
+  }));
+  $('add').onclick = () => {
+    data.works.push(blank());
+    current = data.works.length - 1;
+    touch();
+    render();
+  };
+
+  const w = data.works[current];
+  $('editor').innerHTML = w ? editor(w) : '<p class="hint">Nessun lavoro. Creane uno con “Nuovo lavoro”.</p>';
+  if (w) bind(w);
+}
+
+function editor(w) {
+  return `
+    <div class="row" style="justify-content:space-between">
+      <h2>${esc(w.title) || 'Senza titolo'}</h2>
+      <button class="danger" id="remove">Elimina lavoro</button>
+    </div>
+
+    <div class="grid2">
+      <label><span>Titolo</span><input data-f="title" value="${esc(w.title)}"></label>
+      <label class="row" style="align-self:end"><input type="checkbox" data-f="soon" ${w.soon ? 'checked' : ''}> In sviluppo (mostra “Prossimamente”)</label>
+    </div>
+
+    <div class="section">
+      <span class="label">Oggetto in scena</span>
+      <div class="hero">
+        ${w.hero ? `<img src="${esc(src(w.hero))}" alt="">` : '<p class="hint">Nessuna immagine.</p>'}
+        <div style="display:grid;gap:8px">
+          <span class="file"><button>Carica immagine…</button><input type="file" id="hero" accept="image/png,image/webp,image/svg+xml"></span>
+          <p class="hint">PNG o WebP con sfondo trasparente (in Blender: Film → Transparent).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section grid2">
+      ${['it', 'en'].map(l => `
+        <div style="display:grid;gap:14px">
+          <span class="label">${l === 'it' ? 'Italiano' : 'English'}</span>
+          <label><span>${l === 'it' ? 'Tipologia' : 'Kind'}</span><input data-f="${l}.kind" value="${esc(w[l]?.kind)}"></label>
+          <label><span>${l === 'it' ? 'Testo' : 'Text'}</span><textarea data-f="${l}.text">${esc(w[l]?.text)}</textarea></label>
+        </div>`).join('')}
+      <p class="hint" style="grid-column:1/-1">Lascia una riga vuota tra un paragrafo e l'altro.</p>
+    </div>
+
+    <div class="section">
+      <div class="row"><span class="label">Scheda tecnica</span><button id="addSpec">+ Riga</button></div>
+      ${w.specs.length ? `<table>
+        <tr><th>Voce</th><th>Valore</th><th>Label</th><th>Value</th><th></th></tr>
+        ${w.specs.map((s, i) => `<tr>
+          <td><input data-spec="${i}.it.0" value="${esc(s.it?.[0])}"></td>
+          <td><input data-spec="${i}.it.1" value="${esc(s.it?.[1])}"></td>
+          <td><input data-spec="${i}.en.0" value="${esc(s.en?.[0])}"></td>
+          <td><input data-spec="${i}.en.1" value="${esc(s.en?.[1])}"></td>
+          <td><button class="danger" data-unspec="${i}">×</button></td></tr>`).join('')}
+      </table>` : '<p class="hint">Nessuna riga.</p>'}
+    </div>
+
+    <div class="section">
+      <div class="row"><span class="label">Immagini</span>
+        <span class="file"><button>+ Aggiungi immagini…</button><input type="file" id="addImages" accept="image/*" multiple></span></div>
+      <p class="hint">Oggetto: scontornato, grande sotto il titolo. Foto: ambientate, due per riga. Disegno: tavole tecniche, chiare su fondo scuro (meglio PNG trasparente con linee bianche).</p>
+      <div class="images">
+        ${w.images.map((img, i) => `
+          <div class="image">
+            <img src="${esc(src(img.src))}" alt="">
+            <select data-img="${i}.type">
+              ${['object', 'photo', 'drawing'].map(t => `<option value="${t}" ${img.type === t ? 'selected' : ''}>${{ object: 'Oggetto', photo: 'Foto', drawing: 'Disegno' }[t]}</option>`).join('')}
+            </select>
+            <input data-img="${i}.it" placeholder="Didascalia" value="${esc(img.it)}">
+            <input data-img="${i}.en" placeholder="Caption" value="${esc(img.en)}">
+            <div class="row">
+              <button data-imove="${i}.-1">←</button><button data-imove="${i}.1">→</button>
+              <button class="danger" data-unimg="${i}" style="margin-left:auto">Rimuovi</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function bind(w) {
+  const ed = $('editor');
+  ed.querySelectorAll('[data-f]').forEach(el => {
+    el.oninput = () => {
+      const [a, b] = el.dataset.f.split('.');
+      const v = el.type === 'checkbox' ? el.checked : el.value;
+      if (b) (w[a] ||= {})[b] = v;
+      else w[a] = v;
+      touch();
+      if (a === 'title' || a === 'soon') {
+        ed.querySelector('h2').textContent = w.title || 'Senza titolo';
+        const item = $('list').querySelector(`[data-i="${current}"] span`);
+        if (item) item.innerHTML = `${esc(w.title) || '—'} ${w.soon ? '<small>· in sviluppo</small>' : ''}`;
+      }
+    };
+  });
+  ed.querySelectorAll('[data-spec]').forEach(el => (el.oninput = () => {
+    const [i, l, k] = el.dataset.spec.split('.');
+    (w.specs[i][l] ||= ['', ''])[k] = el.value;
+    touch();
+  }));
+  ed.querySelectorAll('[data-img]').forEach(el => (el.oninput = () => {
+    const [i, k] = el.dataset.img.split('.');
+    w.images[i][k] = el.value;
+    touch();
+  }));
+  ed.querySelectorAll('[data-unspec]').forEach(el => (el.onclick = () => {
+    w.specs.splice(+el.dataset.unspec, 1);
+    touch();
+    render();
+  }));
+  ed.querySelectorAll('[data-unimg]').forEach(el => (el.onclick = () => {
+    w.images.splice(+el.dataset.unimg, 1);
+    touch();
+    render();
+  }));
+  ed.querySelectorAll('[data-imove]').forEach(el => (el.onclick = () => {
+    const [i, d] = el.dataset.imove.split('.').map(Number);
+    const j = i + d;
+    if (j < 0 || j >= w.images.length) return;
+    [w.images[i], w.images[j]] = [w.images[j], w.images[i]];
+    touch();
+    render();
+  }));
+  $('addSpec').onclick = () => {
+    w.specs.push({ it: ['', ''], en: ['', ''] });
+    touch();
+    render();
+  };
+  $('remove').onclick = () => {
+    if (!confirm(`Eliminare “${w.title}”? Sparirà dal sito alla prossima pubblicazione.`)) return;
+    data.works.splice(current, 1);
+    current = Math.max(0, current - 1);
+    touch();
+    render();
+  };
+  $('hero').onchange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    w.hero = await stage(file, w, 'hero');
+    touch();
+    render();
+  };
+  $('addImages').onchange = async e => {
+    for (const file of e.target.files) {
+      const type = /png|webp|svg/.test(file.type) ? 'object' : 'photo';
+      w.images.push({ src: await stage(file, w, 'img'), type, it: '', en: '' });
+    }
+    touch();
+    render();
+  };
+}
+
+// ---------- images ----------
+
+// Images are resized to at most MAX px and saved as WebP, which keeps
+// transparency and keeps the repository light. SVGs go up untouched.
+async function stage(file, w, kind) {
+  status('Preparo l’immagine…');
+  w.id ||= slug(w.title);
+  const name = `media/${w.id}-${kind}-${Date.now().toString(36)}`;
+  let path, b64, url;
+  if (file.type === 'image/svg+xml') {
+    const text = await file.text();
+    path = name + '.svg';
+    b64 = toBase64(text);
+    url = URL.createObjectURL(file);
+  } else {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, MAX / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * k);
+    c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/webp', 0.84));
+    path = name + '.webp';
+    b64 = await new Promise(r => {
+      const fr = new FileReader();
+      fr.onload = () => r(fr.result.split(',')[1]);
+      fr.readAsDataURL(blob);
+    });
+    url = URL.createObjectURL(blob);
+  }
+  uploads.set(path, b64);
+  previews.set(path, url);
+  status('Modifiche non pubblicate');
+  return path;
+}
+
+// ---------- publishing ----------
+
+function used() {
+  const set = new Set();
+  for (const w of data.works) {
+    if (w.hero) set.add(w.hero);
+    for (const i of w.images) set.add(i.src);
+  }
+  return set;
+}
+
+$('save').onclick = async () => {
+  $('save').disabled = true;
+  try {
+    for (const w of data.works) w.id ||= slug(w.title);
+    const keep = used();
+
+    let n = 0;
+    for (const [path, b64] of uploads) {
+      if (!keep.has(path)) continue;
+      status(`Carico le immagini… ${++n}`);
+      await put(path, b64, `Add ${path}`);
+    }
+    uploads.clear();
+
+    status('Pubblico i testi…');
+    const res = await put('content.json', toBase64(JSON.stringify(data, null, 2) + '\n'), 'Update works', sha);
+    sha = res.content.sha;
+
+    const media = (await gh(`media?ref=${cfg.branch}`)) || [];
+    for (const f of media) {
+      if (keep.has(f.path)) continue;
+      status(`Elimino le immagini non usate… ${f.name}`);
+      await gh(f.path, { method: 'DELETE', body: JSON.stringify({ message: `Remove ${f.path}`, sha: f.sha, branch: cfg.branch }) });
+    }
+
+    dirty = false;
+    status('Pubblicato. Il sito si aggiorna in circa un minuto.');
+  } catch (e) {
+    $('save').disabled = false;
+    status('Errore: ' + e.message + '. Riprova.', true);
+  }
+};
+
+// ---------- start ----------
+
+try {
+  const saved = JSON.parse(sessionStorage.getItem(KEY) || localStorage.getItem(KEY));
+  if (saved) {
+    for (const k of ['owner', 'repo', 'branch']) $(k).value = saved[k];
+    connectWith(saved).catch(() => {
+      $('login').hidden = false;
+      $('app').hidden = true;
+    });
+  }
+} catch (e) {}
+</script>
